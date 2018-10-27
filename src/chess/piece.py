@@ -14,6 +14,14 @@ class Move(object):
     def __str__(self):
         return f"{self.x}, {self.y}"
 
+    def __hash__(self):
+        return 11 * self.x + 13 * self.y + 7 * self.directional + 3 * self.can_take
+    
+    def __eq__(self, other):
+        if isinstance(other, Move):
+            return self.x==other.x and self.y==other.y and self.can_take == other.can_take and self.directional==other.directional
+        return False
+
 class ChessPiece(object):
 
     def __init__(self, team_id, name):
@@ -32,7 +40,7 @@ class ChessPiece(object):
 
     @property
     def moves(self):
-        return []
+        return {}
 
 
 class Pawn(ChessPiece):
@@ -42,9 +50,9 @@ class Pawn(ChessPiece):
 
     @property
     def moves(self):
-        return [Move(0,1, can_take=False),
+        return {Move(0,1, can_take=False),
                 Move(-1,1),
-                Move(1,1)]
+                Move(1,1)}
 
 
 class Rook(ChessPiece):
@@ -54,8 +62,10 @@ class Rook(ChessPiece):
 
     @property
     def moves(self):
-        return [Move(0,1,directional=True),
-                Move(1,0,directional=True),]
+        return {Move(0,1,directional=True),
+                Move(1,0,directional=True),
+                Move(0,-1,directional=True),
+                Move(-1,0,directional=True)}
 
 
 class Knight(ChessPiece):
@@ -65,7 +75,14 @@ class Knight(ChessPiece):
 
     @property
     def moves(self):
-        return []
+        return {Move(1,3),
+                Move(-1,3),
+                Move(1,-3),
+                Move(-1,-3),
+                Move(3,1),
+                Move(-3,1),
+                Move(3,-1),
+                Move(-3,-1)}
 
     def __repr__(self):
         return self._name[0].lower()
@@ -77,7 +94,10 @@ class Bishop(ChessPiece):
 
     @property
     def moves(self):
-        return []
+        return {Move(1,1,True),
+                Move(-1,1,True),
+                Move(1,-1,True),
+                Move(-1,-1,True)}
 
 
 class Queen(ChessPiece):
@@ -87,7 +107,14 @@ class Queen(ChessPiece):
 
     @property
     def moves(self):
-        return []
+        return {Move(1,0,True),
+                Move(-1,0,True),
+                Move(0,-1,True),
+                Move(0,1,True),
+                Move(1,1,True),
+                Move(-1,1,True),
+                Move(1,-1,True),
+                Move(-1,-1,True)}
 
 
 class King(ChessPiece):
@@ -97,4 +124,11 @@ class King(ChessPiece):
 
     @property
     def moves(self):
-        return []
+        return {Move(1,0),
+                Move(-1,0),
+                Move(0,-1),
+                Move(0,1),
+                Move(1,1),
+                Move(-1,1),
+                Move(1,-1),
+                Move(-1,-1)}
