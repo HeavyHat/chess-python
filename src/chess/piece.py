@@ -1,31 +1,34 @@
 class Move(object):
 
-    def __init__(self, x, y, directional=False):
+    def __init__(self, x, y, directional=False, can_take=True):
         self.x = x
         self.y = y
         self.directional = directional
+        self.can_take = can_take
 
     def __repr__(self):
         if self.directional:
             return f"Move along {self.x},{self.y}"
         return f"Move {self.y} up, {self.x} across."
 
+    def __str__(self):
+        return f"{self.x}, {self.y}"
 
 class ChessPiece(object):
 
     def __init__(self, team_id, name):
-        self.__team_id = team_id
-        self.__name = name
+        self._team_id = team_id
+        self._name = name
 
     def __str__(self):
-        return f"{self.__team_id} {self.__name}"
+        return f"{self._team_id} {self._name}"
 
     def __repr__(self):
-        return self.__name[0]
+        return self._name[0]
 
     @property
     def team(self):
-        return self.__team_id
+        return self._team_id
 
     @property
     def moves(self):
@@ -39,7 +42,9 @@ class Pawn(ChessPiece):
 
     @property
     def moves(self):
-        return []
+        return [Move(0,1, can_take=False),
+                Move(-1,1),
+                Move(1,1)]
 
 
 class Rook(ChessPiece):
@@ -49,7 +54,8 @@ class Rook(ChessPiece):
 
     @property
     def moves(self):
-        return []
+        return [Move(0,1,directional=True),
+                Move(1,0,directional=True),]
 
 
 class Knight(ChessPiece):
@@ -61,6 +67,8 @@ class Knight(ChessPiece):
     def moves(self):
         return []
 
+    def __repr__(self):
+        return self._name[0].lower()
 
 class Bishop(ChessPiece):
 
